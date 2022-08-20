@@ -1,0 +1,23 @@
+server:
+  port: 9527
+
+spring:
+  application:
+    name: cloud-zuul-gateway
+
+eureka:
+  client:
+    service-url:
+      #defaultZone: http://eureka7001.com:7001/eureka,http://eureka7002.com:7002/eureka,http://eureka7003.com:7003/eureka
+      defaultZone: http://127.0.0.1:7001/eureka,http://127.0.0.1:7002/eureka
+  instance:
+    preferIpAddress: true
+    ip-address: 127.0.0.1
+
+zuul:
+  routes:
+    product-service: # 这里是路由id，随意写
+      path: /CLOUD-PAYMENT-SERVICE/** # 这里是映射路径
+      # url: http://127.0.0.1:9001 # 映射路径对应的实际url地址
+      serviceId: CLOUD-PAYMENT-SERVICE #整合eureka后会从eureka中获取服务地址
+      sensitiveHeaders: #默认zuul会屏蔽cookie，cookie不会传到下游服务，这里设置为空则取 消默认的黑名单，如果设置了具体的头信息则不会传到下游服务
