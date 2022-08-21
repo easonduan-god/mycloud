@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.time.ZonedDateTime;
 
 @RestController
 @Slf4j
@@ -34,9 +36,10 @@ public class PaymentController
     }
 
     @GetMapping(value = "/payment/get/{id}")
-    public CommonResult<Payment> getPaymentById(@PathVariable("id") Long id)
+    public CommonResult<Payment> getPaymentById(@PathVariable("id") Long id, HttpServletRequest request)
     {
         Payment payment = paymentService.getPaymentById(id);
+        System.out.println(ZonedDateTime.now()+":"+request.getHeader("Request-Id"));
         log.info("*****查询结果:{}",payment);
         if (payment != null) {
             return new CommonResult(200,"查询成功"+"\t 服务端口："+serverPort,payment);
@@ -58,8 +61,9 @@ public class PaymentController
     }
 
     @GetMapping(value = "/payment/lb")
-    public String getPaymentLB()
+    public String getPaymentLB(HttpServletRequest request)
     {
+        System.out.println(ZonedDateTime.now()+":"+request.getParameter("X-Request-Id"));
         return serverPort;
     }
 }
